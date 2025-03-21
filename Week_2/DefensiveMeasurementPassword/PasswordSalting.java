@@ -2,41 +2,49 @@ package Week_2.DefensiveMeasurementPassword;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 
 public class PasswordSalting {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
         String[] usernames = { "user1", "user2", "user3" };
         String[] passwords = { "password123", "password456", "password789" };
-        String[] salts = { "salt1", "salt2", "salt3" }; // randomly generated salts
 
-        String[] hashedPassword = new String[usernames.length];
+        String[] salts = new String[usernames.length];
+        String[] hashedPasswords = new String[usernames.length];
 
+        // Generate salts and hash passwords
         for (int i = 0; i < usernames.length; i++) {
-            hashedPassword[i] = hashPassword(passwords[i], salts[i]);
+            salts[i] = generateSalt();
+            hashedPasswords[i] = hashPassword(passwords[i], salts[i]);
         }
 
-        System.out.println();
-        System.out.println("Stored Table inside Datbase: ");
-        System.out.println("Username        Salt         HashedPassword");
-        System.out.println("--------        ----         --------------");
+        // Simulate storage in a database
+        System.out.println("\n=== SALTED PASSWORD STORAGE ===");
+        System.out.printf("%-10s | %-12s | %s%n", "Username", "Salt", "HashedPassword");
+        System.out.println("------------|--------------|----------------------------------------------");
         for (int i = 0; i < usernames.length; i++) {
-            System.out.println(usernames[i] + "           " + salts[i] + "       " + hashedPassword[i]);
+            System.out.printf("%-10s | %-12s | %s%n", usernames[i], salts[i], hashedPasswords[i]);
         }
-
     }
 
-    private static String hashPassword(String password, String salt) {
+    // Securely generates a random salt
+    private static String generateSalt() {
+        byte[] salt = new byte[8]; // 64 bits
+        new SecureRandom().nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
+    }
+
+    // Hash password + salt
+    private static String hashPassword(String password, String salt) throws Exception {
         return hash(password + salt);
     }
 
-    private static String hash(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(password.getBytes());
-            return Base64.getEncoder().encodeToString(hashBytes);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    // SHA-256 hash function
+    private static String hash(String input) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = digest.digest(input.getBytes("UTF-8"));
+        return Base64.getEncoder().encodeToString(hashBytes);
     }
 }

@@ -4,46 +4,46 @@ import java.math.BigInteger;
 
 public class DiffieHellman {
     public static void main(String[] args) {
-        // Alice and Bob agree on a prime number p and a base g
+        // Shared agreement: prime modulus (p) and base (g)
         BigInteger modulus = new BigInteger("104729"); // Large prime number
-        BigInteger base = new BigInteger("17");
+        BigInteger base = new BigInteger("17");        // Primitive root mod p
 
-        // Alice generates a private key a
-        BigInteger aSecret = new BigInteger("8");
+        // Private keys (should be randomly generated in real scenarios)
+        BigInteger aSecret = new BigInteger("8");   // Alice's private key
+        BigInteger bSecret = new BigInteger("15");  // Bob's private key
 
-        // Bob generates a private key b
-        BigInteger bSecret = new BigInteger("15");
+        // Public keys
+        BigInteger A = modExp(base, aSecret, modulus); // Alice's public key
+        BigInteger B = modExp(base, bSecret, modulus); // Bob's public key
 
-        // Alice computes A = g^a mod p
-        BigInteger A = modExp(base, aSecret, modulus);
+        // Shared secret computation
+        BigInteger sA = modExp(B, aSecret, modulus); // Alice computes secret
+        BigInteger sB = modExp(A, bSecret, modulus); // Bob computes secret
 
-        // Bob computes B = g^b mod p
-        BigInteger B = modExp(base, bSecret, modulus);
+        // Output
+        System.out.println("=== DIFFIE-HELLMAN KEY EXCHANGE DEMO ===\n");
 
-        // Alice and Bob exchange A and B
-        // Alice computes s = B^a mod p
-        BigInteger sA = modExp(B, aSecret, modulus);
+        System.out.println("[Public Agreement]");
+        System.out.println("  Prime modulus (p): " + modulus);
+        System.out.println("  Base (g):          " + base);
 
-        // Bob computes s = A^b mod p
-        BigInteger sB = modExp(A, bSecret, modulus);
+        System.out.println("\n[Private Keys - kept secret]");
+        System.out.println("  Alice's private key (a): " + aSecret);
+        System.out.println("  Bob's private key (b):   " + bSecret);
 
-        System.out.println("Shared between Alice and Bob");
-        System.out.println("Base:                    " + base);
-        System.out.println("Prime (Modulus):         " + modulus);
-        System.out.println();
-        System.out.println("Calculating what Alice and Bob share");
-        System.out.println("Alice's Private Key:     " + aSecret);
-        System.out.println("Bob's Private Key:       " + bSecret);
-        System.out.println("Alice's Public Key:      " + A);
-        System.out.println("Bob's Public Key:        " + B);
-        System.out.println();
-        System.out.println("Shared Secret Key (Should be the same)");
-        System.out.println("Alice's Secret Key:      " + sA);
-        System.out.println("Bob's Secret Key:        " + sB);
+        System.out.println("\n[Public Keys - exchanged openly]");
+        System.out.println("  Alice's public key (A = g^a mod p): " + A);
+        System.out.println("  Bob's public key (B = g^b mod p):   " + B);
+
+        System.out.println("\n[Shared Secret Key - computed independently]");
+        System.out.println("  Alice computes: (B^a mod p) = " + sA);
+        System.out.println("  Bob computes:   (A^b mod p) = " + sB);
+
+        System.out.println("\n✅ Shared Secret Match: " + sA.equals(sB));
     }
 
-    // Method to perform modular exponentiation using BigInteger
+    // Efficient modular exponentiation using Java's BigInteger
     public static BigInteger modExp(BigInteger base, BigInteger exp, BigInteger mod) {
-        return base.modPow(exp, mod); // Java's built-in efficient method
+        return base.modPow(exp, mod);
     }
 }

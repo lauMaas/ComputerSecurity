@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 public class RSAManual {
     public static void main(String[] args) {
-        int bitLength = 16; // p and q are 16 bits each (~32-bit RSA key for clarity)
+        int bitLength = 16; // p and q are 16 bits each (~32-bit RSA key)
         SecureRandom random = new SecureRandom();
 
         // Step 1: Generate p and q (small primes for clarity)
@@ -75,7 +75,6 @@ public class RSAManual {
             decryptedMessage.append((char) decryptedM.intValue()); // Convert back to char
         }
 
-        // Output Results
         System.out.println("\nEncrypted Message:        " + encryptedMessage.toString().trim());
         System.out.println("Decrypted Message:        " + decryptedMessage.toString());
         System.out.println();

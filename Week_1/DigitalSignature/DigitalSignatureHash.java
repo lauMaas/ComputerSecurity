@@ -5,9 +5,10 @@ import java.security.SecureRandom;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 public class DigitalSignatureHash {
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        int bitLength = 16; // Small bit-length for clarity
+        int bitLength = 16; // Small bit-length
         SecureRandom random = new SecureRandom();
 
         // Generate RSA key pair for Alice
@@ -19,20 +20,19 @@ public class DigitalSignatureHash {
 
         // Message
         String message = "HELLO";
-        System.out.println("🔹 Original Message: " + message);
+        System.out.println("Original Message: " + message);
 
         // Alice signs the message with a hash
         BigInteger hash = alice.hashMessage(message);
         BigInteger signature = alice.signMessageWithHash(message); // Line 26
-        System.out.println("🔹 Alice's Message Hashed: " + hash);
-        System.out.println("🔹 Alice's Digital Signature (With Hashing - Single Number): " + signature);
-        
+        System.out.println("Alice's Message Hashed: " + hash);
+        System.out.println("Alice's Digital Signature (With Hashing - Single Number): " + signature);
 
         System.out.println("\n--------------------------------------------------\n");
 
         // Bob verifies the signature
         boolean isValid = alice.verifySignatureWithHash(message, signature);
-        System.out.println("🔹 Bob Verifies Alice's Signature (With Hashing): " + (isValid ? "✅ Valid" : "❌ Invalid"));
+        System.out.println("Bob Verifies Alice's Signature (With Hashing): " + (isValid ? "✅ Valid" : "❌ Invalid"));
     }
 }
 
@@ -69,7 +69,7 @@ class RSAKeyPair2 {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = digest.digest(message.getBytes(StandardCharsets.UTF_8));
         BigInteger hash = new BigInteger(1, hashBytes);
-        return hash.mod(N); 
+        return hash.mod(N);
     }
 
     // 🔹 Step 2: Sign the Hash with Private Key
@@ -83,8 +83,8 @@ class RSAKeyPair2 {
         BigInteger expectedHash = hashMessage(message);
         BigInteger decryptedHash = signature.modPow(e, N); // Decrypt signature with public key
 
-        System.out.println("🔹 Bob's Decrypted Hash: " + decryptedHash);
-        System.out.println("🔹 Bob's Expected Hash: " + expectedHash);
+        System.out.println("Bob's Decrypted Hash: " + decryptedHash);
+        System.out.println("Bob's Expected Hash: " + expectedHash);
         return expectedHash.equals(decryptedHash);
     }
 }

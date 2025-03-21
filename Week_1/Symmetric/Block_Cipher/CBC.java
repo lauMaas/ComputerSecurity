@@ -34,7 +34,6 @@ public class CBC {
         // Encrypt individual blocks (for print visualization)
 
         // Step 4: Display results
-        // Step 4: Display results
         System.out.println("Plaintext (ASCII):                      " + plaintext);
         System.out.println("Plaintext (Binary):                     " + bytesToBinaryString(plaintextBytes));
         System.out.println("Plaintext (HEX):                        " + bytesToHex(plaintextBytes));

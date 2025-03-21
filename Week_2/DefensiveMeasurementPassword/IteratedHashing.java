@@ -7,17 +7,30 @@ import java.util.Base64;
 public class IteratedHashing {
     public static void main(String[] args) {
         String password = "password123";
-        int iterations = 1000;
+        int iterations = 10;
+
+        System.out.println("=== ITERATED HASHING DEMO ===\n");
+        System.out.println("Original Password: " + password);
+        System.out.println("Hashing Algorithm: SHA-256");
+        System.out.println("Iterations: " + iterations + "\n");
 
         String hashedPassword = hashPassword(password, iterations);
-        System.out.println("Hashed Password: " + hashedPassword);
+        System.out.println("\nFinal Hashed Password: " + hashedPassword);
     }
 
     private static String hashPassword(String password, int iterations) {
-        for(int i = 0; i < iterations; i++) {
-            password = hash(password);
+        String current = password;
+        for(int i = 1; i <= iterations; i++) {
+            String previous = current;
+            current = hash(current);
+            String label = "p";
+            for (int j = 1; j < i; j++) {
+                label = "H(" + label + ")";
+            }
+            label = "H(" + label + ")";
+            System.out.printf("%s = %s%n", label, current);
         }
-        return password;
+        return current;
     }
 
     private static String hash(String password) {
